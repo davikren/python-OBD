@@ -38,7 +38,7 @@ from .protocols import *
 from .utils import OBDStatus
 
 logger = logging.getLogger(__name__)
-
+isCommandNone = bool(False)
 
 class ELM327:
     """
@@ -553,7 +553,11 @@ class ELM327:
 
         # log, and remove the "bytearray(   ...   )" part
         logger.debug("read: " + repr(buffer)[10:-1])
-
+        if (repr(buffer)[10:-1]==b'NO DATA\r\r>'):
+            global isCommandNone = bool(True)
+        else:
+            global isCommandNone = bool(False)
+        
         # clean out any null characters
         buffer = re.sub(b"\x00", b"", buffer)
 
